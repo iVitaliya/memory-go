@@ -27,13 +27,20 @@ type IHasAny struct {
 func KeyAt[T any](storage map[string]T, idx int) string {
 	var (
 		value   string = ""
-		lastIdx        = len(storage) - 1
+		lastIdx int    = len(storage) - 1
 	)
 
 	if idx > lastIdx {
 		logger.Error(FormatString("The provided index \"{0}\" isn't a valid index as it exceeds the last available index", []string{
 			colors.Red(Stringify[int](idx)),
 		}))
+		logger.Debug("Because the previous fetching through the last index failed, we supplied you with the actual last index of said collection")
+
+		for i, v := range SendAll(storage).Keys {
+			if idx == i {
+				value = v
+			}
+		}
 
 		return value
 	}
@@ -50,7 +57,7 @@ func KeyAt[T any](storage map[string]T, idx int) string {
 func ValueAt[T any](storage map[string]T, idx int) T {
 	var (
 		key   string = KeyAt[T](storage, idx)
-		value        = GetItem[T](storage, key)
+		value T      = GetItem[T](storage, key)
 	)
 
 	return value

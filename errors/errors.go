@@ -46,17 +46,20 @@ func NoKeyError(msgType uint, key string) {
 	var str string
 	switch msgType {
 	case Delete:
-		str = utils.FormatString("Couldn't delete the key \"{0}\" as it either doesn't exist or it failed deleting it", []string{
+		str = utils.FormatString("The key \"{0}\" couldn't be deleted as it either doesn't exist or it failed deleting it", []string{
 			colors.Red(key),
 		})
 		break
 	case Set:
-		str = "The key couldn't be set in the map as the provided key was either empty or it contained invalid characters"
+		str = utils.FormatString("The key \"{0}\" couldn't be set in the map as the provided key was either empty or it contained invalid characters", []string{
+			colors.Red(key),
+		})
 		break
 	case Update:
 		str = utils.FormatString("The key \"{0}\" couldn't be updated in the map as it couldn't be found as a existing key", []string{
 			colors.Red(key),
 		})
+		break
 	}
 
 	logger.Error(str)
